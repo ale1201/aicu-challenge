@@ -1,1 +1,21 @@
 Here you can find the link to the video: 
+
+
+
+Challenge Django
+For this project, I used Django and Django REST Framework (DRF) as the foundation due to their robustness, security features, and scalability. Django provides built-in authentication, admin interface, and ORM, which helped in quickly developing a secure backend. DRF extends Django’s capabilities by offering an intuitive way to build RESTful APIs efficiently.
+For authentication, I chose JWT (JSON Web Tokens) via the djangorestframework-simplejwt library. JWT provides a stateless and scalable token-based approach with short-lived access tokens and refresh capabilities, which aligns well with the security requirements of healthcare applications. I also use a 5 minutes token-expiricy policy, to ensure token rotation and a more secure API for clients
+All models were structured with clear separation of concerns, ensuring modularity. I opted for custom user roles (Doctor/Patient) via an extended AbstractUser to maintain flexibility in handling role-based access control. An user can be either a patient or a doctor. A patient has health records that can be modified. A patient can be assigned to a doctor. I assume that an administrator user is the one in charge of those assignments. As a doctor can have many patients and a patient can have many doctors, that will be a many-to-many relationship, so I made the class Assignments to manage this relationship. so, an assignment can only be created by an administrator. Once an assignment has been created and a patient is assigned to a doctor, that doctor can now add annotations to that patient, and that annotation will be attached to the patient’s health record. 
+
+Decision-Making Criteria
+Authentication & Security: I prioritized security by implementing short-lived JWTs, logout via token blacklisting, and fine-grained permission classes to restrict access based on user role. Also, all endpoints are protected, this because of the sensitivity of the data (health records). I also use different permissions to access different endpoints. For example, a doctor can not assign to itself a patient, or a patient cannot create medical annotations. All protected endpoints require a valid access token.
+
+Role Separation: Using one User model with OneToOne relationships to Doctor and Patient models ensures scalability while keeping medical and personal data distinct.
+
+Modular App Structure: Each concern (auth, annotations, health records, assignments) was placed in its own app. This improves maintainability and allows for testing and extending each component independently. Depending on the business requirements, a more scalable architecture, like hexagonal architecture, can be implemented to improve scalability and maintainability. 
+
+Permissions and Ownership: Custom permission classes (IsPatientOwner, etc.) were used to ensure patients can only access their own records and doctors can only annotate records for assigned patients.
+
+Notifications: a notification system via email was created and it notifies when a new patient is assigned to a doctor. 
+
+

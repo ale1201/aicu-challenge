@@ -1,0 +1,1 @@
+web: gunicorn aicu_project.wsgi
